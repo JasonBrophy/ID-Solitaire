@@ -63,13 +63,13 @@ class Game {
         int tmp1;
         int tmp2;
         Scanner in = new Scanner(System.in); 
-        System.out.println("Is this a move or remove, 0 for move, 1 for remove: ");
+        System.out.println("Move, Remove, or Deal, 0 for Move, 1 for Remove, 2 for deal: ");
         tmp1 = in.nextInt();
-        in.next();
         if(tmp1 == 0){
             for(int i = 0; i < 5; ++i){
                 if(i == 4){
-                    System.out.println("No column is empty, but there is a legal move. ");
+                    if(!flag)
+                        System.out.println("No column is empty, but there is a legal move. ");
                     break;
                 }
                 if(stacks[i].canMoveTo())
@@ -79,21 +79,27 @@ class Game {
                 do{
                     System.out.println("Move from column ?  0, 1, 2, or 3: ");
                     tmp1 = in.nextInt();
-                    in.next();
-                }while (!stacks[tmp1].canMoveTo());
+                }while (!stacks[tmp1].canMoveFrom());
                 do{
                     flag = false;
                     flag2 = false;
                     System.out.println("Move to column ? 0, 1, 2, or 3: ");
                     tmp2 = in.nextInt();
-                    in.next();
-                    if(tmp1 == tmp2)
+                    if(tmp1 != tmp2)
                         flag = true;
                     if(stacks[tmp2 % 4].canMoveTo())
                         flag2 = true;
                 }while(!flag || !flag2);
                 stacks[tmp2].insertCard(stacks[tmp1].remove());
             }
+            setRemovable();
+        }
+        else if(tmp1 == 2){
+            if (!pile.notEmpty())
+                return;
+            for(int i = 0; i < 4; ++i)
+                stacks[i].insertCard(pile.getOne());
+            displaySituation();
         }
         else {
             do {

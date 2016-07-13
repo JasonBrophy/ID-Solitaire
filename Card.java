@@ -1,5 +1,5 @@
 /**
- *Jason Brophy (c) 2016
+ *Copyright (c) Jason Brophy 2016
  *
  */
 

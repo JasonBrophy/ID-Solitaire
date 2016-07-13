@@ -5,30 +5,34 @@
 class Stack {
     protected Card [] column; //A stack of cards, to be 13 in size (max can be reached)
     protected int index; //The index in use.
-    
+
     Stack(){
         column = new Card [13];
-        index = 0;
+        index = -1;
     }
 
     public int insertCard(Card toAdd){
         if(index > 12)
             return -1;
-        if(index != 0)
-            ++index;
+        ++index;
         column[index] = new Card(toAdd);
         return index;
     }
 
     public boolean canMoveTo(){
-        if(index == 0)
+        if(index == -1)
+            return true;
+        return false;
+    }
+
+    public boolean canMoveFrom(){
+        if(index > -1)
             return true;
         return false;
     }
 
     public Card remove(Card makesRemovable){
-    
-        if(index == 0)
+        if(index == -1)
             return null;
         if(column[index].canRemove(makesRemovable)){
             Card temp = column[index];
@@ -43,14 +47,13 @@ class Stack {
             return null;
         Card temp = column[index];
         column[index] = null;
-        if(index != 0)
-            --index;
+        --index;
         return temp;
     }
 
     public boolean canRemove(Card makesRemovable){
     
-        if(index == 0)
+        if(index == -1)
             return false;
         if(column[index].canRemove(makesRemovable)){
             return true;
@@ -59,6 +62,8 @@ class Stack {
     }
 
     public Card getTop(){
+        if(index == -1)
+            return null;
         return this.column[index];
     }
 
@@ -70,10 +75,10 @@ class Stack {
     }
 
     public void displayLoc(int loc){
-        if(loc != 0)
-                loc = loc % index;
+        if(loc != -1)
+                loc = loc % 12;
         if(column[loc] == null) {
-            System.out.print("  empty  ");
+            System.out.print("empty  ");
             return;
         }
         column[loc].display();
@@ -81,7 +86,7 @@ class Stack {
 
     public void displayTop(){
         if(column[index] == null){
-            System.out.print("  empty  ");
+            System.out.print("empty  ");
             return;
         }
         column[index].display();
