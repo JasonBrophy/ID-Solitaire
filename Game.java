@@ -130,12 +130,12 @@ class Game {
             j = 0;
             while(j < 4) {
                 if (indexes[j] == -1) {
-                    System.out.print("        ");
+                    System.out.print(" empty ");
                     ++j;
                     continue;
                 }
-                stacks[j].displayLoc(indexes[j]--);
-                sum += indexes[j];
+                stacks[j].displayLoc(indexes[j]);
+                sum += indexes[j]--;
                 ++j;
             }
             System.out.println();

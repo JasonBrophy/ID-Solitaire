@@ -4,7 +4,7 @@
 
 class Stack {
     protected Card [] column; //A stack of cards, to be 13 in size (max can be reached)
-    protected int index; //The index in use.
+    protected int index; //The most recent index in use.
 
     Stack(){
         column = new Card [13];
@@ -64,6 +64,7 @@ class Stack {
     public Card getTop(){
         if(index == -1)
             return null;
+        System.out.println(index);
         return this.column[index];
     }
 
@@ -76,7 +77,7 @@ class Stack {
 
     public void displayLoc(int loc){
         if(loc != -1)
-                loc = loc % 12;
+                loc = loc % 13;
         if(column[loc] == null) {
             System.out.print("empty  ");
             return;
