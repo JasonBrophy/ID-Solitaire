@@ -1,11 +1,15 @@
+package edu.jbrophypdx.idsolitaire;
+
+import android.graphics.Canvas;
+import android.widget.ImageView;
+
 /**
  *Copyright (c) Jason Brophy 2016
  */
 
 class Stack {
-    protected Card [] column; //A stack of cards, to be 13 in size (max can be reached)
+    protected Card[] column; //A stack of cards, to be 13 in size (max can be reached)
     protected int index; //The most recent index in use.
-
     Stack(){
         column = new Card [13];
         index = -1;
@@ -64,7 +68,7 @@ class Stack {
     public Card getTop(){
         if(index == -1)
             return null;
-        System.out.println(index);
+       // System.out.println(index);
         return this.column[index];
     }
 
@@ -97,6 +101,16 @@ class Stack {
         return index;
     }
 
+    public void draw(ImageView view, Canvas canvas, int height, int width, int index){
+
+        if(this.index == -1){
+            //add draw empty
+        }
+        canvas.drawBitmap(column[0].getBitmap(), (index+2) * width/6, height/70,null);
+        for(int i = 0; i < this.index; ++i)
+            canvas.drawBitmap(column[i].getBitmap(), (index+2) * width/6, i*height/12,null);
+
+    }
 }
         
 
