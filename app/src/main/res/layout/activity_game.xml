@@ -1,21 +1,67 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context="edu.jbrophypdx.idsolitaire.Game">
+    android:layout_height="match_parent">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
     <ImageView
         android:id="@+id/custom"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        app:layout_widthPercent="100%"
+        app:layout_heightPercent="75%"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        android:background="@color/background"
+        android:contentDescription="@string/desc" />
+
+    <Button
+        android:id="@+id/button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_above="@+id/removeC1"
+        android:layout_alignParentBottom="@+id/custom"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="100%"
+        android:text="New Button"
+        android:onClick="dealCards" />
+    <Button
+        android:id="@+id/removeC4"
+        android:layout_below="@+id/custom"
+        android:layout_alignParentRight="true"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="20%"
+        android:text="@string/rC4"
+        android:onClick="removeC4" />
+    <Button
+        android:id="@+id/removeC3"
+        android:layout_toLeftOf="@+id/removeC4"
+        android:layout_toStartOf="@+id/removeC4"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="20%"
+        android:text="@string/rC3"
+        android:onClick="removeC3" />
+    <Button
+        android:id="@+id/removeC2"
+        android:layout_toLeftOf="@+id/removeC3"
+        android:layout_toStartOf="@+id/removeC3"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="20%"
+        android:text="@string/rC2"
+        android:onClick="removeC2" />
+    <Button
+        android:id="@+id/removeC1"
+        android:layout_toLeftOf="@+id/removeC2"
+        android:layout_toStartOf="@+id/removeC2"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="20%"
+        android:text="@string/rC1"
+        android:onClick="removeC1" />
+
+
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
 
 
-</LinearLayout>
+</android.support.percent.PercentRelativeLayout>

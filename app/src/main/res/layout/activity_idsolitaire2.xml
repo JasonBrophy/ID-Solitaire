@@ -1,34 +1,73 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#0099cc"
-tools:context="edu.jbrophypdx.idsolitaire.IDSolitaire">
-
-<!-- The primary full-screen view. This can be replaced with whatever view
-     is needed to present your content, e.g. VideoView, SurfaceView,
-     TextureView, etc. -->
-
-<!-- This FrameLayout insets its children based on system windows using
-     android:fitsSystemWindows. -->
-
-<FrameLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal|top">
+    tools:context="edu.jbrophypdx.idsolitaire.Game">
 
-    <TextView
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <ImageView
+        android:id="@+id/custom"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:text="@string/Title"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal|top" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/background"/>
+    <Button
+        android:id="@+id/removeC1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/rC1"
+        android:layout_above="@+id/removeC4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="removeC1"/>
 
     <Button
+        android:id="@+id/removeC2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/rC2"
+        android:layout_above="@+id/removeC4"
+        android:layout_alignLeft="@+id/removeC4"
+        android:layout_alignStart="@+id/removeC4"
+        android:onClick="removeC2"/>
+    <Button
+        android:id="@+id/removeC3"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/rC3"
+        android:layout_toStartOf="@+id/removeC2"
+        android:layout_toLeftOf="@+id/removeC2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/removeC1"
+        android:layout_alignEnd="@+id/removeC1"
+        android:onClick="removeC3"/>
+    <Button
+        android:id="@+id/removeC4"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/rC4"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="removeC4"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/New_Game"
-        android:id="@+id/newGame"
-        android:layout_gravity="center_horizontal|bottom" />
-</FrameLayout>
-</FrameLayout>
+        android:text="New Button"
+        android:id="@+id/button"
+        android:layout_above="@+id/removeC1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="dealCards" />
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+
+</RelativeLayout>

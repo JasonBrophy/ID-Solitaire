@@ -104,11 +104,22 @@ class Stack {
     public void draw(ImageView view, Canvas canvas, int height, int width, int index){
 
         if(this.index == -1){
+            return;
             //add draw empty
         }
-        canvas.drawBitmap(column[0].getBitmap(), (index+2) * width/6, height/70,null);
-        for(int i = 0; i < this.index; ++i)
-            canvas.drawBitmap(column[i].getBitmap(), (index+2) * width/6, i*height/12,null);
+        int offset;
+        if(index == 0)
+            offset = -30;
+        else if(index == 1)
+            offset = -20;
+        else if(index == 2)
+            offset = -10;
+        else
+            offset = 0;
+
+        canvas.drawBitmap(column[0].getBitmap(), (index+2) * width/6 + offset, 10,null);
+        for(int i = 1; i < this.index+1; ++i)
+            canvas.drawBitmap(column[i].getBitmap(), ((index+2) * width/6) + offset, i*(height/17)+10,null);
 
     }
 }

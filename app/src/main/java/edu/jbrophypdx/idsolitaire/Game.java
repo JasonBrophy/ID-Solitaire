@@ -1,7 +1,9 @@
 package edu.jbrophypdx.idsolitaire;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,8 +14,10 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
 
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -25,6 +29,9 @@ public class Game extends Activity {
     protected Stack[] stacks;
     protected int score;
     protected boolean [] removable;
+    protected ImageView view;
+    protected Bitmap draw;
+    protected Canvas canvas;
 
     static int images[] = {
             R.drawable.s2,
@@ -89,36 +96,15 @@ public class Game extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_game);
-        //ActionBar actionBar = getSupportActionBar();
-        //if (actionBar != null) {
-        //    actionBar.setDisplayHomeAsUpEnabled(true);
-       // }
 
-        /*mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
-
-
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);*/
+        this.view = (ImageView) findViewById(R.id.custom);
 
         Context context = this.getApplicationContext();
         Resources res = context.getResources();
         int height = getScreenHeight(context);
-        int width = getScreenWidth(this.getApplicationContext());
-        Bitmap draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(draw);
-        ImageView view = new ImageView(context);
+        int width = getScreenWidth(context);
+        this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        this.canvas = new Canvas(draw);
         this.pile = new Deck(res, images, height, width);
         pile.shuffle();
         this.stacks = new Stack [4];
@@ -126,21 +112,18 @@ public class Game extends Activity {
             stacks[i] = new Stack();
         this.score = 0;
         removable = new boolean[4];
-        dealCards(draw, canvas, view);
-        //draw(canvas);
-        this.play(draw, canvas, view);
+        dealCards();
+        view.draw(canvas);
+        view.invalidate();
+        //this.play();
 
     }
 
 
-    public void play(Bitmap draw, Canvas canvas, ImageView view){
-        for(int i = 0; i < 4; ++i)
-            stacks[i].insertCard(pile.getOne());
-        //displaySituation();
+    public void play(){
         setRemovable();
         while(isLegalMove() && pile.notEmpty())
-            getMove(draw, canvas, view);
-       // System.out.println("edu.jbrophypdx.idsolitaire.Game Over");
+            dealCards();
     }
 
     public void setRemovable(){
@@ -171,85 +154,89 @@ public class Game extends Activity {
         return removable[removeFrom];
     }
 
-
-    public void getMove(Bitmap draw, Canvas canvas, ImageView view){
-        boolean flag = false;
-        boolean flag2 = false;
-        int tmp1 =2;
-       // Scanner in = new Scanner(System.in);
-        //System.out.println("Move, Remove, or Deal, 0 for Move, 1 for Remove, 2 for deal: ");
-        //tmp1 = in.nextInt();
-        if(tmp1 == 0){
-            moveCard();
-        }
-        else if(tmp1 == 2){
-            if(!dealCards(draw, canvas, view))
-                return;
-        }
-        else {
-            removeCard();
-        }
+    public void dealCards(View view){
+        this.dealCards();
     }
-
-    public boolean dealCards(Bitmap draw, Canvas canvas, ImageView view) {
+    public boolean dealCards() {
         if (!pile.notEmpty())
             return false;
         for(int i = 0; i < 4; ++i)
             stacks[i].insertCard(pile.getOne());
         setRemovable();
-        draw(draw, canvas, view);
-        //displaySituation();
+        this.draw();
         return true;
     }
 
-    public boolean removeCard(){
-        //int tmp1;
-        //Scanner in = new Scanner(System.in);
-        //do {
-        //    System.out.println("Please enter the column to remove the card from, 0, 1, 2, or 3: ");
-        //    tmp1 = in.nextInt() % 4;
-        //    if (tmp1 < 0)
-        //        tmp1 = -tmp1;
-         //   if (!removable[tmp1])
-         //       System.out.println("That is not a valid move, please try again.");
-       // } while (!removable[tmp1]);
-       // stacks[tmp1].remove();
-       // System.out.println();
-       // System.out.println();
-       // setRemovable();
-        //this.displaySituation();
-        return true;
+    public void removeC1(View view){
+        if(removeCard(0))
+            return;
+        else{
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK",null);
+            alert.show();
+        }
+    }
+    public void removeC2(View view){
+        if(removeCard(1))
+            return;
+        else{
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK",null);
+            alert.show();
+        }
+    }
+    public void removeC3(View view){
+        if(removeCard(2))
+            return;
+        else{
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK",null);
+            alert.show();
+        }
+    }
+    public void removeC4(View view) {
+        if (removeCard(3))
+            return;
+        else {
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK", null);
+            alert.show();
+        }
+    }
+
+    public boolean removeCard(int removeFrom){
+        if(removable[removeFrom]) {
+            stacks[removeFrom].remove();
+            setRemovable();
+
+            Context context = this.getApplicationContext();
+            int height = getScreenHeight(context);
+            int width = getScreenWidth(context);
+            this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            this.canvas = new Canvas(draw);
+            this.draw();
+            return true;
+        }
+        else return false;
     }
     public boolean moveCard() {
-        /*Scanner in = new Scanner(System.in);
-        boolean flag;
-        boolean flag2;
-        int tmp1;
-        int tmp2;
-        for (int i = 0; i < 5; ++i) {
-            if (i == 4) {
-                System.out.println("No column is empty, but there is a legal move. ");
-                return false;
-            }
-            if(stacks[i].canMoveTo())
-               break;
-        }
-        do {
-         System.out.println("Move from column ?  0, 1, 2, or 3: ");
-            tmp1 = in.nextInt();
-        } while (!stacks[tmp1].canMoveFrom());
-        do {
-            flag = false;
-            flag2 = false;
-            System.out.println("Move to column ? 0, 1, 2, or 3: ");
-            tmp2 = in.nextInt();
-            if (tmp1 != tmp2)
-                flag = true;
-            if (stacks[tmp2 % 4].canMoveTo())
-                flag2 = true;
-        } while (!flag || !flag2);
-        stacks[tmp2].insertCard(stacks[tmp1].remove());
-        setRemovable();*/
+        //setRemovable();
         return true;
     }
     public void displaySituation(){
@@ -302,11 +289,12 @@ public class Game extends Activity {
         return width;
     }
 
-    public void draw(Bitmap draw, Canvas canvas, ImageView view){
+    public void draw(){
         Context context = this.getApplicationContext();
         int height = getScreenHeight(context);
         int width = getScreenWidth(context);
-        canvas.drawBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.bj), 20, 20, null);
+        canvas.drawBitmap(Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.bj), width/6, height/8, false), 0, 40, null);
         for(int i = 0; i < 4; ++i)
             stacks[i].draw(view, canvas, height, width, i);
         view.setImageBitmap(draw);

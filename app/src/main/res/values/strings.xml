@@ -6,8 +6,12 @@
     <string name="New_Game">New Game</string>
     <string name="Title">ID Solitaire</string>
     <string name="Deal">Deal Cards</string>
-
+    <string name="rC1">Remove from Column 1</string>
+    <string name="rC2">Remove from Column 2</string>
+    <string name="rC3">Remove from Column 3</string>
+    <string name="rC4">Remove from Column 4</string>
     <string name="title_activity_idsolitaire">IDSolitaire</string>
+    <string name="desc">This is the view the game is drawn into</string>
 
     <string name="title_activity_game">Game</string>
 </resources>
