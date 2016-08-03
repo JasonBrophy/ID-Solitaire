@@ -1,6 +1,8 @@
 package edu.jbrophypdx.idsolitaire;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.widget.ImageView;
 
 /**
@@ -24,15 +26,11 @@ class Stack {
     }
 
     public boolean canMoveTo(){
-        if(index == -1)
-            return true;
-        return false;
+        return index == -1;
     }
 
     public boolean canMoveFrom(){
-        if(index > -1)
-            return true;
-        return false;
+        return index > -1;
     }
 
     public Card remove(Card makesRemovable){
@@ -103,10 +101,6 @@ class Stack {
 
     public void draw(ImageView view, Canvas canvas, int height, int width, int index){
 
-        if(this.index == -1){
-            return;
-            //add draw empty
-        }
         int offset;
         if(index == 0)
             offset = -30;
@@ -116,6 +110,13 @@ class Stack {
             offset = -10;
         else
             offset = 0;
+
+        if(this.index == -1){
+            Paint paint = new Paint();
+            paint.setColor(0xffffff);
+            canvas.drawBitmap(Bitmap.createBitmap(width/6, height/8, Bitmap.Config.ARGB_8888), (index+2) * width/6 + offset, 10,paint);
+            return;//add draw empty
+        }
 
         canvas.drawBitmap(column[0].getBitmap(), (index+2) * width/6 + offset, 10,null);
         for(int i = 1; i < this.index+1; ++i)
