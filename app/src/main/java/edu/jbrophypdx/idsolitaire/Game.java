@@ -137,9 +137,10 @@ public class Game extends Activity {
             }
 
             for(int j = 0; j < 4; ++j){
-                if(i == j || stacks[j] == null);
-                else if(removable[i] = stacks[i].getTop().canRemove(stacks[j].getTop()))
-                    break;
+                if (i != j && stacks[j] != null) {
+                    if(removable[i] = stacks[i].getTop().canRemove(stacks[j].getTop()))
+                        break;
+                }
             }
         }
     }
@@ -171,9 +172,7 @@ public class Game extends Activity {
     }
 
     public void removeC1(View view){
-        if(removeCard(0))
-            return;
-        else{
+        if(!removeCard(0)){
             //Code grabbed and edited from
             //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
             AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -184,9 +183,7 @@ public class Game extends Activity {
         }
     }
     public void removeC2(View view){
-        if(removeCard(1))
-            return;
-        else{
+        if(!removeCard(1)){
             //Code grabbed and edited from
             //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
             AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -197,9 +194,7 @@ public class Game extends Activity {
         }
     }
     public void removeC3(View view){
-        if(removeCard(2))
-            return;
-        else{
+        if(!removeCard(2)){
             //Code grabbed and edited from
             //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
             AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -210,9 +205,7 @@ public class Game extends Activity {
         }
     }
     public void removeC4(View view) {
-        if (removeCard(3))
-            return;
-        else {
+        if (!removeCard(3)){
             //Code grabbed and edited from
             //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
             AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -243,6 +236,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
         else {
             if(!stacks[0].canMoveTo()) {
@@ -251,11 +245,13 @@ public class Game extends Activity {
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-                return;
             }
-            stacks[0].insertCard(stacks[moveFrom].remove());
+            else {
+                stacks[0].insertCard(stacks[moveFrom].remove());
+                this.draw();
+                this.setRemovable();
+            }
             this.moveFrom = -1;
-            this.draw();
             Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC3 = (Button) findViewById(R.id.moveC3);
             Button bC4 = (Button) findViewById(R.id.moveC4);
@@ -265,6 +261,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
     }
 
@@ -288,20 +285,22 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
         else {
-            this.moveFrom = -1;
             if(!stacks[1].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-                return;
             }
-            stacks[1].insertCard(stacks[moveFrom].remove());
+            else {
+                stacks[1].insertCard(stacks[moveFrom].remove());
+                this.draw();
+                this.setRemovable();
+            }
             this.moveFrom = -1;
-            this.draw();
             Button bC2 = (Button) findViewById(R.id.moveC1);
             Button bC3 = (Button) findViewById(R.id.moveC3);
             Button bC4 = (Button) findViewById(R.id.moveC4);
@@ -311,6 +310,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
     }
     public void moveC3(View view){
@@ -333,6 +333,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
         else {
             if(!stacks[2].canMoveTo()) {
@@ -341,11 +342,13 @@ public class Game extends Activity {
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-                return;
             }
-            stacks[2].insertCard(stacks[moveFrom].remove());
+            else {
+                stacks[2].insertCard(stacks[moveFrom].remove());
+                this.draw();
+                this.setRemovable();
+            }
             this.moveFrom = -1;
-            this.draw();
             Button bC2 = (Button) findViewById(R.id.moveC1);
             Button bC3 = (Button) findViewById(R.id.moveC2);
             Button bC4 = (Button) findViewById(R.id.moveC4);
@@ -355,6 +358,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
     }
     public void moveC4(View view){
@@ -377,6 +381,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
         else {
             if(!stacks[3].canMoveTo()) {
@@ -385,11 +390,13 @@ public class Game extends Activity {
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-                return;
             }
-            stacks[3].insertCard(stacks[moveFrom].remove());
+            else {
+                stacks[3].insertCard(stacks[moveFrom].remove());
+                this.draw();
+                this.setRemovable();
+            }
             this.moveFrom = -1;
-            this.draw();
             Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC3 = (Button) findViewById(R.id.moveC3);
             Button bC4 = (Button) findViewById(R.id.moveC1);
@@ -399,6 +406,7 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
+            view.invalidate();
         }
     }
 
@@ -406,7 +414,6 @@ public class Game extends Activity {
         if(removable[removeFrom]) {
             stacks[removeFrom].remove();
             setRemovable();
-
             Context context = this.getApplicationContext();
             int height = getScreenHeight(context);
             int width = getScreenWidth(context);
@@ -447,6 +454,8 @@ public class Game extends Activity {
         Context context = this.getApplicationContext();
         int height = getScreenHeight(context);
         int width = getScreenWidth(context);
+        this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(this.draw);
         canvas.drawBitmap(Bitmap.createScaledBitmap(
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.bj), width/6, height/8, false), 0, 40, null);
         for(int i = 0; i < 4; ++i)

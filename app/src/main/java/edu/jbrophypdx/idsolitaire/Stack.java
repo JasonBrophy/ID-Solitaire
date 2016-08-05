@@ -33,17 +33,6 @@ class Stack {
         return index > -1;
     }
 
-    public Card remove(Card makesRemovable){
-        if(index == -1)
-            return null;
-        if(column[index].canRemove(makesRemovable)){
-            Card temp = column[index];
-            column[index--] = null;
-            return temp;
-        }
-        return null;
-    }
-
     public Card remove(){
         if(column[index] == null)
             return null;
@@ -53,20 +42,9 @@ class Stack {
         return temp;
     }
 
-    public boolean canRemove(Card makesRemovable){
-    
-        if(index == -1)
-            return false;
-        if(column[index].canRemove(makesRemovable)){
-            return true;
-        }
-        return false;
-    }
-
     public Card getTop(){
         if(index == -1)
             return null;
-       // System.out.println(index);
         return this.column[index];
     }
 
@@ -81,7 +59,6 @@ class Stack {
         if(loc != -1)
                 loc = loc % 13;
         if(column[loc] == null) {
-            System.out.print("empty  ");
             return;
         }
         column[loc].display();
@@ -89,7 +66,6 @@ class Stack {
 
     public void displayTop(){
         if(column[index] == null){
-            System.out.print("empty  ");
             return;
         }
         column[index].display();
