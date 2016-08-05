@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Jason Brophy 2016
+ */
+
 package edu.jbrophypdx.idsolitaire;
 
 import android.app.Activity;
@@ -9,27 +13,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.MotionEvent;
-
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ *
  */
 public class Game extends Activity {
 
     protected Deck pile;
     protected Stack[] stacks;
     protected int score;
-    protected boolean [] removable;
+    protected boolean[] removable;
     protected ImageView view;
     protected Bitmap draw;
     protected Canvas canvas;
@@ -89,7 +88,6 @@ public class Game extends Activity {
             R.drawable.ck,
             R.drawable.ca,
             R.drawable.bj,
-            //R.drawable.rj
     };
 
 
@@ -109,8 +107,8 @@ public class Game extends Activity {
         this.canvas = new Canvas(draw);
         this.pile = new Deck(res, images, height, width);
         pile.shuffle();
-        this.stacks = new Stack [4];
-        for(int i = 0; i < 4; ++i)
+        this.stacks = new Stack[4];
+        for (int i = 0; i < 4; ++i)
             stacks[i] = new Stack();
         this.score = 0;
         removable = new boolean[4];
@@ -118,94 +116,84 @@ public class Game extends Activity {
         view.draw(canvas);
         view.invalidate();
         this.moveFrom = -1;
-        //this.play();
-
     }
 
-
-    public void play(){
-        setRemovable();
-        while(isLegalMove() && pile.notEmpty())
-            dealCards();
-    }
-
-    public void setRemovable(){
-        for(int i = 0; i < 4; ++i){
-            if(stacks[i].getTop() == null){
+    public void setRemovable() {
+        for (int i = 0; i < 4; ++i) {
+            if (stacks[i].getTop() == null) {
                 removable[i] = false;
                 continue;
             }
 
-            for(int j = 0; j < 4; ++j){
+            for (int j = 0; j < 4; ++j) {
                 if (i != j && stacks[j] != null) {
-                    if(removable[i] = stacks[i].getTop().canRemove(stacks[j].getTop()))
+                    if (removable[i] = stacks[i].getTop().canRemove(stacks[j].getTop()))
                         break;
                 }
             }
         }
     }
 
-    public boolean isLegalMove(){
-        for(int i = 0; i < 4; ++i){
-            if(removable[i])
-                return true;
+    public void dealCards(View view) {
+
+        if (!this.dealCards()) {
+            if (!this.pile.notEmpty()) {
+                for (int i = 0; i < 4; ++i) {
+                    if (removable[i]) {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+                        alert.setTitle("Out of Cards!");
+                        alert.setMessage("There are still valid moves however.");
+                        alert.setPositiveButton("OK", null);
+                        alert.show();
+                        return;
+                    }
+                }
+            }
         }
-        return false;
     }
 
-    public boolean isLegalMove(int removeFrom){
-        removeFrom = removeFrom % 4;
-        return removable[removeFrom];
-    }
-
-    public void dealCards(View view){
-        this.dealCards();
-    }
     public boolean dealCards() {
         if (!pile.notEmpty())
             return false;
-        for(int i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; ++i)
             stacks[i].insertCard(pile.getOne());
         setRemovable();
         this.draw();
+        if (!pile.notEmpty()) {
+            Button dC = (Button) findViewById(R.id.button);
+            dC.setText(R.string.endGame);
+            dC.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String end;
+                    if (score == 48)
+                        end = "You win!";
+                    else
+                        end = "Your score was " + Integer.toString(score) + " out of 48";
+                    AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+                    alert.setTitle("Game Over");
+                    alert.setMessage(end);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            endActivity();
+                        }
+                    });
+                    alert.show();
+                }
+            });
+            dC.invalidate();
+        }
         return true;
     }
 
-    public void removeC1(View view){
-        if(!removeCard(0)){
-            //Code grabbed and edited from
-            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
-            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
-            alert.setTitle("Invalid!");
-            alert.setMessage("That is not a valid removal");
-            alert.setPositiveButton("OK",null);
-            alert.show();
-        }
+    public void endActivity() {
+        this.finish();
     }
-    public void removeC2(View view){
-        if(!removeCard(1)){
-            //Code grabbed and edited from
-            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
-            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
-            alert.setTitle("Invalid!");
-            alert.setMessage("That is not a valid removal");
-            alert.setPositiveButton("OK",null);
-            alert.show();
-        }
-    }
-    public void removeC3(View view){
-        if(!removeCard(2)){
-            //Code grabbed and edited from
-            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
-            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
-            alert.setTitle("Invalid!");
-            alert.setMessage("That is not a valid removal");
-            alert.setPositiveButton("OK",null);
-            alert.show();
-        }
-    }
-    public void removeC4(View view) {
-        if (!removeCard(3)){
+
+    public void removeC1(View view) {
+        if (!removeCard(0)) {
             //Code grabbed and edited from
             //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
             AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -216,13 +204,49 @@ public class Game extends Activity {
         }
     }
 
-    public void moveC1(View view){
-        if(this.moveFrom == -1) {
-            if(!stacks[0].canMoveFrom()){
+    public void removeC2(View view) {
+        if (!removeCard(1)) {
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK", null);
+            alert.show();
+        }
+    }
+
+    public void removeC3(View view) {
+        if (!removeCard(2)) {
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK", null);
+            alert.show();
+        }
+    }
+
+    public void removeC4(View view) {
+        if (!removeCard(3)) {
+            //Code grabbed and edited from
+            //http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+            AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+            alert.setTitle("Invalid!");
+            alert.setMessage("That is not a valid removal");
+            alert.setPositiveButton("OK", null);
+            alert.show();
+        }
+    }
+
+    public void moveC1(View view) {
+        if (this.moveFrom == -1) {
+            if (!stacks[0].canMoveFrom()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
-                alert.setPositiveButton("OK",null);
+                alert.setPositiveButton("OK", null);
                 alert.show();
                 return;
             }
@@ -237,16 +261,14 @@ public class Game extends Activity {
             bC3.invalidate();
             bC4.invalidate();
             view.invalidate();
-        }
-        else {
-            if(!stacks[0].canMoveTo()) {
+        } else {
+            if (!stacks[0].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-            }
-            else {
+            } else {
                 stacks[0].insertCard(stacks[moveFrom].remove());
                 this.draw();
                 this.setRemovable();
@@ -265,13 +287,13 @@ public class Game extends Activity {
         }
     }
 
-    public void moveC2(View view){
-        if(this.moveFrom == -1) {
-            if(!stacks[1].canMoveFrom()){
+    public void moveC2(View view) {
+        if (this.moveFrom == -1) {
+            if (!stacks[1].canMoveFrom()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
-                alert.setPositiveButton("OK",null);
+                alert.setPositiveButton("OK", null);
                 alert.show();
                 return;
             }
@@ -286,16 +308,14 @@ public class Game extends Activity {
             bC3.invalidate();
             bC4.invalidate();
             view.invalidate();
-        }
-        else {
-            if(!stacks[1].canMoveTo()) {
+        } else {
+            if (!stacks[1].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-            }
-            else {
+            } else {
                 stacks[1].insertCard(stacks[moveFrom].remove());
                 this.draw();
                 this.setRemovable();
@@ -313,13 +333,14 @@ public class Game extends Activity {
             view.invalidate();
         }
     }
-    public void moveC3(View view){
-        if(this.moveFrom == -1) {
-            if(!stacks[2].canMoveFrom()){
+
+    public void moveC3(View view) {
+        if (this.moveFrom == -1) {
+            if (!stacks[2].canMoveFrom()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
-                alert.setPositiveButton("OK",null);
+                alert.setPositiveButton("OK", null);
                 alert.show();
                 return;
             }
@@ -334,16 +355,14 @@ public class Game extends Activity {
             bC3.invalidate();
             bC4.invalidate();
             view.invalidate();
-        }
-        else {
-            if(!stacks[2].canMoveTo()) {
+        } else {
+            if (!stacks[2].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-            }
-            else {
+            } else {
                 stacks[2].insertCard(stacks[moveFrom].remove());
                 this.draw();
                 this.setRemovable();
@@ -361,13 +380,14 @@ public class Game extends Activity {
             view.invalidate();
         }
     }
-    public void moveC4(View view){
-        if(this.moveFrom == -1) {
-            if(!stacks[3].canMoveFrom()){
+
+    public void moveC4(View view) {
+        if (this.moveFrom == -1) {
+            if (!stacks[3].canMoveFrom()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
-                alert.setPositiveButton("OK",null);
+                alert.setPositiveButton("OK", null);
                 alert.show();
                 return;
             }
@@ -382,16 +402,14 @@ public class Game extends Activity {
             bC3.invalidate();
             bC4.invalidate();
             view.invalidate();
-        }
-        else {
-            if(!stacks[3].canMoveTo()) {
+        } else {
+            if (!stacks[3].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
-            }
-            else {
+            } else {
                 stacks[3].insertCard(stacks[moveFrom].remove());
                 this.draw();
                 this.setRemovable();
@@ -410,8 +428,8 @@ public class Game extends Activity {
         }
     }
 
-    public boolean removeCard(int removeFrom){
-        if(removable[removeFrom]) {
+    public boolean removeCard(int removeFrom) {
+        if (removable[removeFrom]) {
             stacks[removeFrom].remove();
             setRemovable();
             Context context = this.getApplicationContext();
@@ -422,8 +440,7 @@ public class Game extends Activity {
             this.draw();
             ++this.score;
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
     private int getScreenHeight(Context context) {
@@ -450,16 +467,17 @@ public class Game extends Activity {
         return width;
     }
 
-    public void draw(){
+    public void draw() {
         Context context = this.getApplicationContext();
         int height = getScreenHeight(context);
         int width = getScreenWidth(context);
         this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas.setBitmap(this.draw);
-        canvas.drawBitmap(Bitmap.createScaledBitmap(
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.bj), width/6, height/8, false), 0, 40, null);
-        for(int i = 0; i < 4; ++i)
-            stacks[i].draw(view, canvas, height, width, i);
+        if (this.pile.notEmpty())
+            canvas.drawBitmap(Bitmap.createScaledBitmap(
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.bj), width / 6, height / 8, false), 0, 40, null);
+        for (int i = 0; i < 4; ++i)
+            stacks[i].draw(canvas, height, width, i);
         view.setImageBitmap(draw);
         view.invalidate();
     }

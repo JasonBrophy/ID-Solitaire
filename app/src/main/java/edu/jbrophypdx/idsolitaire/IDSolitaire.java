@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) Jason Brophy 2016
+ */
 package edu.jbrophypdx.idsolitaire;
 
 
@@ -20,8 +23,13 @@ public class IDSolitaire extends Activity {
         setContentView(R.layout.activity_idsolitaire);
     }
 
-    public void startGame(View view){
+    public void startGame(View view) {
         Intent intent = new Intent(this, Game.class);
+        startActivity(intent);
+    }
+
+    public void instructions(View view) {
+        Intent intent = new Intent(this, Instructions.class);
         startActivity(intent);
     }
 }

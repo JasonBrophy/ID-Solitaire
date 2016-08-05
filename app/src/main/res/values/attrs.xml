@@ -1,4 +1,5 @@
 <resources>
+    <!-- Copyright (c) Jason Brophy 2016 !-->
 
     <!-- Declare custom theme attributes that allow changing which styles are
          used for button bars depending on the API level.

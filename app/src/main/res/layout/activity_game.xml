@@ -1,5 +1,4 @@
-<android.support.percent.PercentRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,100 +9,107 @@
     <ImageView
         android:id="@+id/custom"
         android:layout_width="match_parent"
-        app:layout_heightPercent="70%"
         android:layout_marginTop="0dp"
         android:background="@color/background"
-        android:contentDescription="@string/desc" />
+        android:contentDescription="@string/desc"
+        app:layout_heightPercent="70%" />
 
     <Button
         android:id="@+id/button"
         style="?android:attr/buttonStyleSmall"
-        android:layout_below="@+id/custom"
         android:layout_alignParentBottom="@+id/custom"
-        app:layout_heightPercent="7.5%"
-        app:layout_widthPercent="100%"
-        android:text="@string/Deal"
+        android:layout_below="@+id/custom"
         android:onClick="dealCards"
-        android:textSize="15sp"/>
+        android:text="@string/Deal"
+        android:textSize="15sp"
+        app:layout_heightPercent="7.5%"
+        app:layout_widthPercent="100%" />
+
     <Button
         android:id="@+id/removeC4"
-        android:layout_below="@+id/button"
         android:layout_alignParentRight="true"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/rC4"
+        android:layout_below="@+id/button"
         android:onClick="removeC4"
-        android:textSize="15sp"/>
+        android:text="@string/rC4"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/removeC3"
+        android:layout_below="@+id/button"
         android:layout_toLeftOf="@+id/removeC4"
         android:layout_toStartOf="@+id/removeC4"
-        android:layout_below="@+id/button"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/rC3"
         android:onClick="removeC3"
-        android:textSize="15sp"/>
+        android:text="@string/rC3"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/removeC2"
+        android:layout_below="@+id/button"
         android:layout_toLeftOf="@+id/removeC3"
         android:layout_toStartOf="@+id/removeC3"
-        android:layout_below="@+id/button"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/rC2"
         android:onClick="removeC2"
-        android:textSize="15sp"/>
+        android:text="@string/rC2"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/removeC1"
+        android:layout_below="@+id/button"
         android:layout_toLeftOf="@+id/removeC2"
         android:layout_toStartOf="@+id/removeC2"
-        android:layout_below="@+id/button"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/rC1"
         android:onClick="removeC1"
-        android:textSize="15sp"/>
+        android:text="@string/rC1"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/moveC4"
-        android:layout_below="@+id/removeC4"
         android:layout_alignParentRight="true"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/mfC4"
+        android:layout_below="@+id/removeC4"
         android:onClick="moveC4"
-        android:textSize="15sp"/>
+        android:text="@string/mfC4"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/moveC3"
+        android:layout_below="@+id/removeC3"
         android:layout_toLeftOf="@+id/moveC4"
         android:layout_toStartOf="@+id/moveC4"
-        android:layout_below="@+id/removeC3"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/mfC3"
         android:onClick="moveC3"
-        android:textSize="15sp"/>
+        android:text="@string/mfC3"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/moveC2"
+        android:layout_below="@+id/removeC2"
         android:layout_toLeftOf="@+id/moveC3"
         android:layout_toStartOf="@+id/moveC3"
-        android:layout_below="@+id/removeC2"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/mfC2"
         android:onClick="moveC2"
-        android:textSize="15sp" />
+        android:text="@string/mfC2"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
+
     <Button
         android:id="@+id/moveC1"
+        android:layout_below="@+id/removeC1"
         android:layout_toLeftOf="@+id/moveC2"
         android:layout_toStartOf="@+id/moveC2"
-        android:layout_below="@+id/removeC1"
-        app:layout_heightPercent="12.5%"
-        app:layout_widthPercent="25%"
-        android:text="@string/mfC1"
         android:onClick="moveC1"
-        android:textSize="15sp"/>
-
+        android:text="@string/mfC1"
+        android:textSize="15sp"
+        app:layout_heightPercent="12.5%"
+        app:layout_widthPercent="25%" />
 
 
     <!-- This FrameLayout insets its children based on system windows using

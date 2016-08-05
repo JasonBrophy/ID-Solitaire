@@ -1,17 +1,41 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- Copyright (c) Jason Brophy 2016 !-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="@color/background">
-<TextView android:id="@+id/Title"
-    android:layout_weight=".5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/background"/>
-<Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/New_Game"
-    android:onClick="startGame" />
-</LinearLayout>
+    android:background="@color/background"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/newGame"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"
+        android:background="@color/background"
+        android:gravity="center"
+        android:text="@string/Title"
+        android:textColor="@color/yellow"
+        android:textSize="75sp" />
+
+    <Button
+        android:id="@+id/newGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/instructions"
+        android:layout_centerHorizontal="true"
+        android:onClick="startGame"
+        android:text="@string/New_Game"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="instructions"
+        android:text="@string/instructions"
+        android:textSize="30sp" />
+</RelativeLayout>

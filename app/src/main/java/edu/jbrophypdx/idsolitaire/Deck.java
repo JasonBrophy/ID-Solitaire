@@ -1,14 +1,13 @@
-package edu.jbrophypdx.idsolitaire;
-
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import java.util.Random;
-
 /**
  * Copyright (c) Jason Brophy 2016
  */
+package edu.jbrophypdx.idsolitaire;
+
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.util.Random;
 
 class Deck {
 
@@ -16,14 +15,14 @@ class Deck {
     protected int top;
     protected int size;
 
-    Deck(Resources res, int [] img, int height, int width) {
+    Deck(Resources res, int[] img, int height, int width) {
         this.top = 0;
         this.size = 52;
         this.deck = new Card[this.size];
         for (int i = 0; i < 52; ++i) {
             deck[i] = new Card(i % 13 + 2, i / 13,
                     Bitmap.createScaledBitmap(
-                            BitmapFactory.decodeResource(res, img[i]), width/6, height/8, false));
+                            BitmapFactory.decodeResource(res, img[i]), width / 6, height / 8, false));
         }
     }
 
@@ -48,9 +47,7 @@ class Deck {
     }
 
     public boolean notEmpty() {
-        if (top < 52)
-            return true;
-        return false;
+        return top < 52;
     }
 
 }
