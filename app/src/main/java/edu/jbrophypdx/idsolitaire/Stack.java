@@ -51,14 +51,6 @@ class Stack {
         double widVal = width/6;
         int wid = (int)Math.round(widVal);
         int offset = -(-1-index)*(wid/5);
-        /*if (index == 0)
-            offset = 3;
-        else if (index == 1)
-            offset = -100;
-        else if (index == 2)
-            offset = -50;
-        else
-            offset = 0;*/
 
         if (this.index == -1) {
             Paint paint = new Paint();
@@ -67,7 +59,7 @@ class Stack {
             return;
         }
 
-        canvas.drawBitmap(column[0].getBitmap(), (int)Math.round((index + 1) * widVal)+offset, 0, null);
+        column[0].getImageView()., (int)Math.round((index + 1) * widVal)+offset, 0, null)
         for (int i = 1; i < this.index + 1; ++i)
             canvas.drawBitmap(column[i].getBitmap(), (int)Math.round(((index + 1) * widVal))+offset, i * (height / 17), null);
 

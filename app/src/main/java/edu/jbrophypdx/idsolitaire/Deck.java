@@ -6,6 +6,7 @@ package edu.jbrophypdx.idsolitaire;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.ImageView;
 
 import java.util.Random;
 
@@ -15,15 +16,12 @@ class Deck {
     protected int top;
     protected int size;
 
-    Deck(Resources res, int[] img, int height, int width) {
+    Deck(Resources res, ImageView [] img, int height, int width) {
         this.top = 0;
         this.size = 52;
         this.deck = new Card[this.size];
-        for (int i = 0; i < 52; ++i) {
-            deck[i] = new Card(i % 13 + 2, i / 13,
-                    Bitmap.createScaledBitmap(
-                            BitmapFactory.decodeResource(res, img[i]), width / 6, (int)Math.round((width/6)*1.452), false));
-        }
+        for (int i = 0; i < 52; ++i)
+            deck[i] = new Card(i % 13 + 2, i / 13, img[i]);
     }
 
     public Card getOne() {

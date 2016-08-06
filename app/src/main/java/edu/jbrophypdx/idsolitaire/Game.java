@@ -35,6 +35,7 @@ public class Game extends Activity {
     protected Bitmap draw;
     protected Canvas canvas;
     protected int moveFrom;
+    protected ImageView [] imgViews;
 
     static int images[] = {
             R.drawable.s2,
@@ -106,7 +107,13 @@ public class Game extends Activity {
         int dim = getScreenHeight(context);
         this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
         this.canvas = new Canvas(draw);
-        this.pile = new Deck(res, images, dim, dim);
+        this.imgViews = new ImageView[52];
+        for(int i = 0; i < 52; ++i){
+            this.imgViews[i] = new ImageView(Game.this);
+            this.imgViews[i].setImageBitmap(Bitmap.createScaledBitmap(
+                    BitmapFactory.decodeResource(res, images[i]), dim / 6, (int)Math.round((dim/6)*1.452), false)));
+        }
+        this.pile = new Deck(res, imgViews, dim, dim);
         pile.shuffle();
         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.shufcards);
         mediaPlayer.start();

@@ -4,13 +4,14 @@
 package edu.jbrophypdx.idsolitaire;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 class Card {
     protected int value;
     protected int suit;
-    protected Bitmap img;
+    protected ImageView img;
 
-    Card(int value, int suit, Bitmap img) {
+    Card(int value, int suit, ImageView img) {
         this.value = value;
         this.suit = suit;
         this.img = img;
@@ -34,7 +35,7 @@ class Card {
         return this.suit;
     }
 
-    public Bitmap getBitmap() {
+    public ImageView getImageView() {
         return this.img;
     }
 
