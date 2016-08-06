@@ -22,7 +22,7 @@ class Deck {
         for (int i = 0; i < 52; ++i) {
             deck[i] = new Card(i % 13 + 2, i / 13,
                     Bitmap.createScaledBitmap(
-                            BitmapFactory.decodeResource(res, img[i]), width / 6, height / 8, false));
+                            BitmapFactory.decodeResource(res, img[i]), width / 6, (int)Math.round((width/6)*1.452), false));
         }
     }
 

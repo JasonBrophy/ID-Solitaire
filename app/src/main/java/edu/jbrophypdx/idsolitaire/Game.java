@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -101,11 +102,10 @@ public class Game extends Activity {
 
         Context context = this.getApplicationContext();
         Resources res = context.getResources();
-        int height = getScreenHeight(context);
-        int width = getScreenWidth(context);
-        this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int dim = getScreenHeight(context);
+        this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
         this.canvas = new Canvas(draw);
-        this.pile = new Deck(res, images, height, width);
+        this.pile = new Deck(res, images, dim, dim);
         pile.shuffle();
         this.stacks = new Stack[4];
         for (int i = 0; i < 4; ++i)
@@ -260,7 +260,6 @@ public class Game extends Activity {
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
-            view.invalidate();
         } else {
             if (!stacks[0].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -277,13 +276,15 @@ public class Game extends Activity {
             Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC3 = (Button) findViewById(R.id.moveC3);
             Button bC4 = (Button) findViewById(R.id.moveC4);
+            Button v = (Button) view;
             bC2.setText(getString(R.string.mfC2));
             bC3.setText(getString(R.string.mfC3));
             bC4.setText(getString(R.string.mfC4));
+            v.setText(getString(R.string.mfC1));
             bC2.invalidate();
             bC3.invalidate();
             bC4.invalidate();
-            view.invalidate();
+            v.invalidate();
         }
     }
 
@@ -298,16 +299,15 @@ public class Game extends Activity {
                 return;
             }
             this.moveFrom = 1;
-            Button bC2 = (Button) findViewById(R.id.moveC1);
+            Button bC1 = (Button) findViewById(R.id.moveC1);
             Button bC3 = (Button) findViewById(R.id.moveC3);
             Button bC4 = (Button) findViewById(R.id.moveC4);
-            bC2.setText(getString(R.string.mtC1));
+            bC1.setText(getString(R.string.mtC1));
             bC3.setText(getString(R.string.mtC3));
             bC4.setText(getString(R.string.mtC4));
-            bC2.invalidate();
+            bC1.invalidate();
             bC3.invalidate();
             bC4.invalidate();
-            view.invalidate();
         } else {
             if (!stacks[1].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -321,13 +321,15 @@ public class Game extends Activity {
                 this.setRemovable();
             }
             this.moveFrom = -1;
-            Button bC2 = (Button) findViewById(R.id.moveC1);
+            Button bC1 = (Button) findViewById(R.id.moveC1);
             Button bC3 = (Button) findViewById(R.id.moveC3);
             Button bC4 = (Button) findViewById(R.id.moveC4);
-            bC2.setText(getString(R.string.mfC1));
+            Button v = (Button) view;
+            bC1.setText(getString(R.string.mfC1));
             bC3.setText(getString(R.string.mfC3));
             bC4.setText(getString(R.string.mfC4));
-            bC2.invalidate();
+            v.setText(getString(R.string.mfC2));
+            bC1.invalidate();
             bC3.invalidate();
             bC4.invalidate();
             view.invalidate();
@@ -345,16 +347,15 @@ public class Game extends Activity {
                 return;
             }
             this.moveFrom = 2;
-            Button bC2 = (Button) findViewById(R.id.moveC1);
-            Button bC3 = (Button) findViewById(R.id.moveC2);
+            Button bC1 = (Button) findViewById(R.id.moveC1);
+            Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC4 = (Button) findViewById(R.id.moveC4);
-            bC2.setText(getString(R.string.mtC1));
-            bC3.setText(getString(R.string.mtC2));
+            bC1.setText(getString(R.string.mtC1));
+            bC2.setText(getString(R.string.mtC2));
             bC4.setText(getString(R.string.mtC4));
+            bC1.invalidate();
             bC2.invalidate();
-            bC3.invalidate();
             bC4.invalidate();
-            view.invalidate();
         } else {
             if (!stacks[2].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -368,16 +369,18 @@ public class Game extends Activity {
                 this.setRemovable();
             }
             this.moveFrom = -1;
-            Button bC2 = (Button) findViewById(R.id.moveC1);
-            Button bC3 = (Button) findViewById(R.id.moveC2);
+            Button bC1 = (Button) findViewById(R.id.moveC1);
+            Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC4 = (Button) findViewById(R.id.moveC4);
-            bC2.setText(getString(R.string.mfC1));
-            bC3.setText(getString(R.string.mfC2));
+            Button v = (Button) view;
+            bC1.setText(getString(R.string.mfC1));
+            bC2.setText(getString(R.string.mfC2));
             bC4.setText(getString(R.string.mfC4));
+            v.setText(getString(R.string.mfC3));
+            bC1.invalidate();
             bC2.invalidate();
-            bC3.invalidate();
             bC4.invalidate();
-            view.invalidate();
+            v.invalidate();
         }
     }
 
@@ -394,14 +397,13 @@ public class Game extends Activity {
             this.moveFrom = 3;
             Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC3 = (Button) findViewById(R.id.moveC3);
-            Button bC4 = (Button) findViewById(R.id.moveC1);
+            Button bC1 = (Button) findViewById(R.id.moveC1);
             bC2.setText(getString(R.string.mtC2));
             bC3.setText(getString(R.string.mtC3));
-            bC4.setText(getString(R.string.mtC1));
+            bC1.setText(getString(R.string.mtC1));
             bC2.invalidate();
             bC3.invalidate();
-            bC4.invalidate();
-            view.invalidate();
+            bC1.invalidate();
         } else {
             if (!stacks[3].canMoveTo()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
@@ -415,16 +417,18 @@ public class Game extends Activity {
                 this.setRemovable();
             }
             this.moveFrom = -1;
+            Button bC1 = (Button) findViewById(R.id.moveC1);
             Button bC2 = (Button) findViewById(R.id.moveC2);
             Button bC3 = (Button) findViewById(R.id.moveC3);
-            Button bC4 = (Button) findViewById(R.id.moveC1);
+            Button v = (Button) view;
+            bC1.setText(getString(R.string.mfC1));
             bC2.setText(getString(R.string.mfC2));
             bC3.setText(getString(R.string.mfC3));
-            bC4.setText(getString(R.string.mfC1));
+            v.setText(getString(R.string.mfC4));
+            bC1.invalidate();
             bC2.invalidate();
             bC3.invalidate();
-            bC4.invalidate();
-            view.invalidate();
+            v.invalidate();
         }
     }
 
@@ -433,9 +437,8 @@ public class Game extends Activity {
             stacks[removeFrom].remove();
             setRemovable();
             Context context = this.getApplicationContext();
-            int height = getScreenHeight(context);
-            int width = getScreenWidth(context);
-            this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            int dim = getScreenHeight(context);
+            this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
             this.canvas = new Canvas(draw);
             this.draw();
             ++this.score;
@@ -444,40 +447,21 @@ public class Game extends Activity {
     }
 
     private int getScreenHeight(Context context) {
-        int height;
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        height = size.y;
-
-        return height;
-    }
-
-    private int getScreenWidth(Context context) {
-        int width;
-
-
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-
-        return width;
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return metrics.heightPixels;
     }
 
     public void draw() {
         Context context = this.getApplicationContext();
-        int height = getScreenHeight(context);
-        int width = getScreenWidth(context);
-        this.draw = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int dim = getScreenHeight(context);
+        this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
         canvas.setBitmap(this.draw);
         if (this.pile.notEmpty())
             canvas.drawBitmap(Bitmap.createScaledBitmap(
-                    BitmapFactory.decodeResource(context.getResources(), R.drawable.bj), width / 6, height / 8, false), 0, 40, null);
+                    BitmapFactory.decodeResource(context.getResources(), R.drawable.back), dim/6, (int)Math.round((dim/6)*1.452), false), 0, 40, null);
         for (int i = 0; i < 4; ++i)
-            stacks[i].draw(canvas, height, width, i);
+            stacks[i].draw(canvas, dim, dim, i);
         view.setImageBitmap(draw);
         view.invalidate();
     }

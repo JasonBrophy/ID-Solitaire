@@ -48,27 +48,28 @@ class Stack {
     }
 
     public void draw(Canvas canvas, int height, int width, int index) {
-
-        int offset;
-        if (index == 0)
-            offset = -30;
+        double widVal = width/6;
+        int wid = (int)Math.round(widVal);
+        int offset = -(-1-index)*(wid/5);
+        /*if (index == 0)
+            offset = 3;
         else if (index == 1)
-            offset = -20;
+            offset = -100;
         else if (index == 2)
-            offset = -10;
+            offset = -50;
         else
-            offset = 0;
+            offset = 0;*/
 
         if (this.index == -1) {
             Paint paint = new Paint();
             paint.setColor(0xffffff);
-            canvas.drawBitmap(Bitmap.createBitmap(width / 6, height / 8, Bitmap.Config.ARGB_8888), (index + 2) * width / 6 + offset, 10, paint);
+            canvas.drawBitmap(Bitmap.createBitmap(wid, (int)Math.round(widVal*1.452), Bitmap.Config.ARGB_8888), wid + offset, 0, paint);
             return;
         }
 
-        canvas.drawBitmap(column[0].getBitmap(), (index + 2) * width / 6 + offset, 10, null);
+        canvas.drawBitmap(column[0].getBitmap(), (int)Math.round((index + 1) * widVal)+offset, 0, null);
         for (int i = 1; i < this.index + 1; ++i)
-            canvas.drawBitmap(column[i].getBitmap(), ((index + 2) * width / 6) + offset, i * (height / 17) + 10, null);
+            canvas.drawBitmap(column[i].getBitmap(), (int)Math.round(((index + 1) * widVal))+offset, i * (height / 17), null);
 
     }
 }
