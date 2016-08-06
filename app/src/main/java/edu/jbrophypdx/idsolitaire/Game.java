@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -107,6 +108,8 @@ public class Game extends Activity {
         this.canvas = new Canvas(draw);
         this.pile = new Deck(res, images, dim, dim);
         pile.shuffle();
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.shufcards);
+        mediaPlayer.start();
         this.stacks = new Stack[4];
         for (int i = 0; i < 4; ++i)
             stacks[i] = new Stack();
