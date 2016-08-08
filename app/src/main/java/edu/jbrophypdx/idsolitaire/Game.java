@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -108,6 +109,8 @@ public class Game extends Activity {
                     BitmapFactory.decodeResource(res, images[i]), dim / 10, (int) Math.round((dim / 10) * 1.452), false));
             this.imgViews[i].setVisibility(ImageView.INVISIBLE);
             this.imgViews[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
+            this.imgViews[i].setX(0);
+            this.imgViews[i].setY(40);
         }
         Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.back), dim / 6, (int) Math.round((dim / 6) * 1.452), false);
         cardBack.setImageBitmap(bmp);
@@ -168,13 +171,8 @@ public class Game extends Activity {
             params = new RelativeLayout.LayoutParams(dim / 10, (int) Math.round(dim / 10 * 1.452));
             temp = pile.getOne();
             tmp = temp.getImageView();
-            index = stacks[i].getIndex();
-            offset = (1 + i) * dim / 40;
-            params.setMargins(Math.round(((i + 1) * dim / 10) + offset), (index + 1) * dim / 25, 0, 0);
             rl.addView(tmp, params);
-            tmp.setVisibility(View.VISIBLE);
-            tmp.invalidate();
-            stacks[i].insertCard(temp);
+            animateDeal(i, temp);
         }
         setRemovable();
 
@@ -214,6 +212,25 @@ public class Game extends Activity {
     //End the activity, used due to alert not having access to finish inside function.
     public void endActivity() {
         this.finish();
+    }
+
+    public void animateDeal(int stackNum, Card card){
+        int index = stacks[stackNum].getIndex();
+        ImageView img = card.getImageView();
+        int dim = this.getScreenHeight(this.getApplicationContext());
+        int newX = Math.round((stackNum + 1) * dim / 10 + (1 + stackNum) * dim / 40);
+        int newY = (index + 1) * dim / 25;
+        stacks[stackNum].insertCard(card);
+        ObjectAnimator vis = ObjectAnimator.ofInt(img, "Visibility", ImageView.VISIBLE);
+        ObjectAnimator oA = ObjectAnimator.ofFloat(img, "X", newX);
+        ObjectAnimator oA2 = ObjectAnimator.ofFloat(img, "Y", newY);
+        vis.setDuration(20);
+        oA.setDuration(1000);
+        oA2.setDuration(1000);
+        vis.start();
+        oA.start();
+        oA2.start();
+
     }
 
     //The following four functions correspond to their respective buttons, on the xml layout
@@ -267,6 +284,25 @@ public class Game extends Activity {
         }
     }
 
+    //Actually remove the card, done by subtracting the index, setting the card ImageView to invisible
+    //invalidating the view.  If removable from, return true, return false if not (for button function.
+    public boolean removeCard(int removeFrom) {
+        if (!removable[removeFrom])
+            return false;
+        Card temp = stacks[removeFrom].remove();
+        animateRemove(temp.getImageView());
+        setRemovable();
+        ++this.score;
+        return true;
+    }
+
+
+    public void animateRemove(ImageView img){
+        ObjectAnimator oA = ObjectAnimator.ofInt(img, "Visibility", ImageView.INVISIBLE);
+        oA.setDuration(10);
+        oA.start();
+
+    }
     //All move functions follow the same pattern (correlated to the buttons
     // on the activity screen), but to avoid excessive switch statements were split
     //into their own four instances.  On first click, the class int movefrom is updated
@@ -467,7 +503,6 @@ public class Game extends Activity {
 
     //Move the ImageView from the top of stack moveFrom, into empty stack MoveTo.  It is left
     //at the new position once finished, so there is no need to update the overall drawing.
-    //// TODO: 8/8/2016 add animation for dealing cards, and for removing cards.
     public void animate(int moveFrom, int moveTo) {
         int dim = this.getScreenHeight(this.getApplicationContext());
         int newX = Math.round((moveTo + 1) * dim / 10 + (1 + moveTo) * dim / 40);
@@ -479,19 +514,6 @@ public class Game extends Activity {
         oA2.setDuration(1000);
         oA.start();
         oA2.start();
-    }
-
-    //Actually remove the card, done by subtracting the index, setting the card ImageView to invisible
-    //invalidating the view.  If removable from, return true, return false if not (for button function.
-    public boolean removeCard(int removeFrom) {
-        if (!removable[removeFrom])
-            return false;
-        Card temp = stacks[removeFrom].remove();
-        temp.getImageView().setVisibility(ImageView.INVISIBLE);
-        temp.getImageView().invalidate();
-        setRemovable();
-        ++this.score;
-        return true;
     }
 
     //Get the display height, useful for setting the size of the cards on screen.

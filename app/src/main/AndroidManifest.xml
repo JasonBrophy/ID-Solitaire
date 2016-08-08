@@ -10,6 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".IDSolitaire"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_idsolitaire"
             android:theme="@style/FullscreenTheme">
@@ -21,6 +22,7 @@
         </activity>
         <activity
             android:name=".Game"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_game"
             android:parentActivityName=".IDSolitaire"
@@ -29,7 +31,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.jbrophypdx.idsolitaire.IDSolitaire" />
         </activity>
-        <activity android:name=".Instructions"></activity>
+        <activity android:name=".Instructions"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
