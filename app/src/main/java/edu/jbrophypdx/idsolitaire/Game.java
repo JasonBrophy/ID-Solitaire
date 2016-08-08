@@ -82,6 +82,7 @@ public class Game extends Activity {
             R.drawable.ca,
             R.drawable.bj,
     };
+
     protected Deck pile;
     protected Stack[] stacks;
     protected int score;
@@ -159,8 +160,7 @@ public class Game extends Activity {
     //This function deals the cards to the piles, updating the layout with the now visible image.
     public void dealCards(View view) {
         Card temp;
-        int index;
-        int offset;
+
         ImageView tmp;
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.playField);
         RelativeLayout.LayoutParams params;
@@ -523,15 +523,4 @@ public class Game extends Activity {
         return metrics.heightPixels;
     }
 
-    //A relic of the pre animation, pre imageview stage.
-    /*public void draw() {
-        Context context = this.getApplicationContext();
-        int dim = getScreenHeight(context);
-        if (this.pile.notEmpty())
-            cardBack.setVisibility(ImageView.VISIBLE);
-        for (int i = 0; i < 4; ++i)
-            stacks[i].draw(dim, i);
-        RelativeLayout rL = (RelativeLayout) findViewById(R.id.playField);
-        rL.invalidate();
-    }*/
 }

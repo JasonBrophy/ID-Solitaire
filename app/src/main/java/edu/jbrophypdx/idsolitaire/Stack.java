@@ -49,23 +49,6 @@ class Stack {
         return this.column[index];
     }
 
-    //Another relic of the preanimation setup, now not used at all after being massively pared down
-   /* public void draw(int width, int index) {
-        //double widVal = width/6;
-        //int wid = (int)Math.round(widVal);
-        //int offset = -(-1-index)*(wid/5);
-        ImageView temp;
-
-        if (this.index == -1) {
-            return;
-        }
-        for(int i = 0; i < this.index; ++i){
-            temp = column[i].getImageView();
-            temp.setVisibility(ImageView.VISIBLE);
-            temp.invalidate();
-        }
-    }*/
-
     public int getIndex() {
         return this.index;
     }
