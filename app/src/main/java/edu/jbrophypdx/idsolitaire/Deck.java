@@ -3,20 +3,19 @@
  */
 package edu.jbrophypdx.idsolitaire;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import java.util.Random;
 
 class Deck {
 
+    protected final int size;
     protected Card[] deck;
     protected int top;
-    protected int size;
 
-    Deck(Resources res, ImageView [] img, int height, int width) {
+    //Initialize all cards in the deck to have the respective ImageView associated with them.
+    //This is used by the passed in imageview array, images are already loaded in them.
+    Deck(ImageView[] img) {
         this.top = 0;
         this.size = 52;
         this.deck = new Card[this.size];
@@ -24,10 +23,12 @@ class Deck {
             deck[i] = new Card(i % 13 + 2, i / 13, img[i]);
     }
 
+    //Get one, and move the index past that top card.
     public Card getOne() {
         return deck[top++];
     }
 
+    //Shuffle the deck, randomly swapping some two cards from 30 - 100 times.
     public void shuffle() {
         Random rand = new Random();
         int numSwaps = rand.nextInt(71) + 30;
@@ -44,6 +45,7 @@ class Deck {
         }
     }
 
+    //if the top is less than 52, we are not past the number of cards in the deck, and therefore not empty.
     public boolean notEmpty() {
         return top < 52;
     }

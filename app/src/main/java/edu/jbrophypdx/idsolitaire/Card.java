@@ -3,7 +3,6 @@
  */
 package edu.jbrophypdx.idsolitaire;
 
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 class Card {
@@ -23,6 +22,7 @@ class Card {
         this.img = toCopy.img;
     }
 
+    //Used to set the removable value.  If the test against card makes this removable, return true.
     public boolean canRemove(Card testAgainst) {
         return testAgainst != null && this.value < testAgainst.getValue() && this.suit == testAgainst.getSuit();
     }

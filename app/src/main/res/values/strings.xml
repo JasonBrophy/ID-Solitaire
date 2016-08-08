@@ -22,7 +22,6 @@
     <string name="instr2">Idiot\'s Delight is a solitaire game played with four columns and a standard deck of 52 cards.  The goal is to end with the four aces in each column at the end of the game. The game begins by dealing one card to each column.  Cards may be removed from play if they are at the top of their column, and, there is another card of the same suit with a higher rank also at the top of a column.  Rank is from 2-A with Ace only being the highest value. If a column is empty, one may move any card on top of another column to that column, however, this is the only case where moving a card is allowed outside removal. In the event no move can be made, four more cards may be dealt to the board, one to each column. The game ends when there are no more cards to be dealt from the pile, and the user clicks the end game button that replaces the deal cards button.  The best possible score is removal of 48 cards, so 48.</string>
 
     <string name="title_activity_idsolitaire">IDSolitaire</string>
-    <string name="desc">This is the view the game is drawn into</string>
     <string name="endGame">End Game</string>
 
     <string name="title_activity_game">Game</string>

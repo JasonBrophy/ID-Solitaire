@@ -23,11 +23,13 @@ public class IDSolitaire extends Activity {
         setContentView(R.layout.activity_idsolitaire);
     }
 
+    //Start the game
     public void startGame(View view) {
         Intent intent = new Intent(this, Game.class);
         startActivity(intent);
     }
 
+    //Go to the instructions activity.
     public void instructions(View view) {
         Intent intent = new Intent(this, Instructions.class);
         startActivity(intent);

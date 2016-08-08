@@ -4,6 +4,7 @@
 
 package edu.jbrophypdx.idsolitaire;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,33 +12,21 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  *
  */
 public class Game extends Activity {
 
-    protected Deck pile;
-    protected Stack[] stacks;
-    protected int score;
-    protected boolean[] removable;
-    protected ImageView view;
-    protected Bitmap draw;
-    protected Canvas canvas;
-    protected int moveFrom;
-    protected ImageView [] imgViews;
-
-    static int images[] = {
+    static final int[] images = {
             R.drawable.s2,
             R.drawable.s3,
             R.drawable.s4,
@@ -92,42 +81,62 @@ public class Game extends Activity {
             R.drawable.ca,
             R.drawable.bj,
     };
-
+    protected Deck pile;
+    protected Stack[] stacks;
+    protected int score;
+    protected boolean[] removable;
+    protected int moveFrom;
+    protected ImageView[] imgViews;
+    protected ImageView cardBack;
+    protected MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_game);
-
-        this.view = (ImageView) findViewById(R.id.custom);
-
         Context context = this.getApplicationContext();
         Resources res = context.getResources();
         int dim = getScreenHeight(context);
-        this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
-        this.canvas = new Canvas(draw);
+        RelativeLayout rL = (RelativeLayout) findViewById(R.id.playField);
+        rL.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Math.round(dim * .65)));
         this.imgViews = new ImageView[52];
-        for(int i = 0; i < 52; ++i){
-            this.imgViews[i] = new ImageView(Game.this);
+        this.cardBack = new ImageView(this.getApplicationContext());
+        for (int i = 0; i < 52; ++i) {
+            this.imgViews[i] = new ImageView(this.getApplicationContext());
             this.imgViews[i].setImageBitmap(Bitmap.createScaledBitmap(
-                    BitmapFactory.decodeResource(res, images[i]), dim / 6, (int)Math.round((dim/6)*1.452), false)));
+                    BitmapFactory.decodeResource(res, images[i]), dim / 10, (int) Math.round((dim / 10) * 1.452), false));
+            this.imgViews[i].setVisibility(ImageView.INVISIBLE);
+            this.imgViews[i].setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
-        this.pile = new Deck(res, imgViews, dim, dim);
+        Bitmap bmp = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.back), dim / 6, (int) Math.round((dim / 6) * 1.452), false);
+        cardBack.setImageBitmap(bmp);
+        cardBack.setVisibility(ImageView.VISIBLE);
+        cardBack.invalidate();
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dim / 10, (int) Math.round((dim / 10) * 1.452));
+        params.topMargin = 40;
+        params.leftMargin = 0;
+        rL.addView(cardBack, params);
+        this.pile = new Deck(imgViews);
         pile.shuffle();
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.shufcards);
-        mediaPlayer.start();
         this.stacks = new Stack[4];
         for (int i = 0; i < 4; ++i)
             stacks[i] = new Stack();
         this.score = 0;
         removable = new boolean[4];
-        dealCards();
-        view.draw(canvas);
-        view.invalidate();
+        this.mp = MediaPlayer.create(context, R.raw.shufcards);
+        mp.start();
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mp.release();
+            }
+        });
         this.moveFrom = -1;
     }
 
+    //Set which columns are removable from, it may be faster to do this on each click, but
+    //The load is pretty minimal (4! iterations).
     public void setRemovable() {
         for (int i = 0; i < 4; ++i) {
             if (stacks[i].getTop() == null) {
@@ -144,32 +153,36 @@ public class Game extends Activity {
         }
     }
 
+    //This function deals the cards to the piles, updating the layout with the now visible image.
     public void dealCards(View view) {
-
-        if (!this.dealCards()) {
-            if (!this.pile.notEmpty()) {
-                for (int i = 0; i < 4; ++i) {
-                    if (removable[i]) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
-                        alert.setTitle("Out of Cards!");
-                        alert.setMessage("There are still valid moves however.");
-                        alert.setPositiveButton("OK", null);
-                        alert.show();
-                        return;
-                    }
-                }
-            }
+        Card temp;
+        int index;
+        int offset;
+        ImageView tmp;
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.playField);
+        RelativeLayout.LayoutParams params;
+        int dim = getScreenHeight(this.getApplicationContext());
+        //The cards are dealt here, with some static values determining the size of the cards
+        //by using the screen size to create the images and the locations, it prevents overflow.
+        for (int i = 0; i < 4; ++i) {
+            params = new RelativeLayout.LayoutParams(dim / 10, (int) Math.round(dim / 10 * 1.452));
+            temp = pile.getOne();
+            tmp = temp.getImageView();
+            index = stacks[i].getIndex();
+            offset = (1 + i) * dim / 40;
+            params.setMargins(Math.round(((i + 1) * dim / 10) + offset), (index + 1) * dim / 25, 0, 0);
+            rl.addView(tmp, params);
+            tmp.setVisibility(View.VISIBLE);
+            tmp.invalidate();
+            stacks[i].insertCard(temp);
         }
-    }
-
-    public boolean dealCards() {
-        if (!pile.notEmpty())
-            return false;
-        for (int i = 0; i < 4; ++i)
-            stacks[i].insertCard(pile.getOne());
         setRemovable();
-        this.draw();
+
+        //If the pile is empty, start the end of game process, giving an end game button to replace
+        //the deal cards button, when the button is clicked, bring up an alert, then end the activity.
         if (!pile.notEmpty()) {
+            cardBack.setVisibility(View.INVISIBLE);
+            cardBack.invalidate();
             Button dC = (Button) findViewById(R.id.button);
             dC.setText(R.string.endGame);
             dC.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +193,7 @@ public class Game extends Activity {
                         end = "You win!";
                     else
                         end = "Your score was " + Integer.toString(score) + " out of 48";
-                    AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                     alert.setTitle("Game Over");
                     alert.setMessage(end);
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -191,17 +204,21 @@ public class Game extends Activity {
                         }
                     });
                     alert.show();
+
                 }
             });
             dC.invalidate();
         }
-        return true;
     }
 
+    //End the activity, used due to alert not having access to finish inside function.
     public void endActivity() {
         this.finish();
     }
 
+    //The following four functions correspond to their respective buttons, on the xml layout
+    //they could be done as one, just getting the id of the view passed in, but I chose to have
+    //the value known, since it can just be passed into a set remove function with no switch cases.
     public void removeC1(View view) {
         if (!removeCard(0)) {
             //Code grabbed and edited from
@@ -250,9 +267,18 @@ public class Game extends Activity {
         }
     }
 
+    //All move functions follow the same pattern (correlated to the buttons
+    // on the activity screen), but to avoid excessive switch statements were split
+    //into their own four instances.  On first click, the class int movefrom is updated
+    //with the value of the button clicked.  The other three buttons are then updated to have
+    //new text stating move to (// TODO: 8/8/2016 only update ones legally moveable to.
+    //With the view passed into each being the clicked button.  On second click,
+    //The stored moveFrom is used to move a card from that stack to the empty.  If not empty
+    //an alert is shown stating as such.  Otherwise, an animated move is done, then all buttons
+    //returned to the original state.
     public void moveC1(View view) {
         if (this.moveFrom == -1) {
-            if (!stacks[0].canMoveFrom()) {
+            if (stacks[0].isEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
@@ -271,15 +297,14 @@ public class Game extends Activity {
             bC3.invalidate();
             bC4.invalidate();
         } else {
-            if (!stacks[0].canMoveTo()) {
+            if (stacks[0].notEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
             } else {
-                stacks[0].insertCard(stacks[moveFrom].remove());
-                this.draw();
+                animate(moveFrom, 0);
                 this.setRemovable();
             }
             this.moveFrom = -1;
@@ -300,7 +325,7 @@ public class Game extends Activity {
 
     public void moveC2(View view) {
         if (this.moveFrom == -1) {
-            if (!stacks[1].canMoveFrom()) {
+            if (stacks[1].isEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
@@ -319,15 +344,15 @@ public class Game extends Activity {
             bC3.invalidate();
             bC4.invalidate();
         } else {
-            if (!stacks[1].canMoveTo()) {
+            if (stacks[1].notEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
             } else {
-                stacks[1].insertCard(stacks[moveFrom].remove());
-                this.draw();
+                animate(moveFrom, 1);
+                //this.draw();
                 this.setRemovable();
             }
             this.moveFrom = -1;
@@ -348,7 +373,7 @@ public class Game extends Activity {
 
     public void moveC3(View view) {
         if (this.moveFrom == -1) {
-            if (!stacks[2].canMoveFrom()) {
+            if (stacks[2].isEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
@@ -367,15 +392,14 @@ public class Game extends Activity {
             bC2.invalidate();
             bC4.invalidate();
         } else {
-            if (!stacks[2].canMoveTo()) {
+            if (stacks[2].notEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
             } else {
-                stacks[2].insertCard(stacks[moveFrom].remove());
-                this.draw();
+                animate(moveFrom, 2);
                 this.setRemovable();
             }
             this.moveFrom = -1;
@@ -396,7 +420,7 @@ public class Game extends Activity {
 
     public void moveC4(View view) {
         if (this.moveFrom == -1) {
-            if (!stacks[3].canMoveFrom()) {
+            if (stacks[3].isEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is empty!");
@@ -415,15 +439,14 @@ public class Game extends Activity {
             bC3.invalidate();
             bC1.invalidate();
         } else {
-            if (!stacks[3].canMoveTo()) {
+            if (stacks[3].notEmpty()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Game.this);
                 alert.setTitle("Invalid!");
                 alert.setMessage("That column is not empty!");
                 alert.setPositiveButton("OK", null);
                 alert.show();
             } else {
-                stacks[3].insertCard(stacks[moveFrom].remove());
-                this.draw();
+                animate(moveFrom, 3);
                 this.setRemovable();
             }
             this.moveFrom = -1;
@@ -442,37 +465,51 @@ public class Game extends Activity {
         }
     }
 
-    public boolean removeCard(int removeFrom) {
-        if (removable[removeFrom]) {
-            stacks[removeFrom].remove();
-            setRemovable();
-            Context context = this.getApplicationContext();
-            int dim = getScreenHeight(context);
-            this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
-            this.canvas = new Canvas(draw);
-            this.draw();
-            ++this.score;
-            return true;
-        } else return false;
+    //Move the ImageView from the top of stack moveFrom, into empty stack MoveTo.  It is left
+    //at the new position once finished, so there is no need to update the overall drawing.
+    //// TODO: 8/8/2016 add animation for dealing cards, and for removing cards.
+    public void animate(int moveFrom, int moveTo) {
+        int dim = this.getScreenHeight(this.getApplicationContext());
+        int newX = Math.round((moveTo + 1) * dim / 10 + (1 + moveTo) * dim / 40);
+        ImageView tmp = stacks[moveFrom].getTop().getImageView();
+        stacks[moveTo].insertCard(stacks[moveFrom].remove());
+        ObjectAnimator oA = ObjectAnimator.ofFloat(tmp, "X", newX);
+        ObjectAnimator oA2 = ObjectAnimator.ofFloat(tmp, "Y", 0);
+        oA.setDuration(1000);
+        oA2.setDuration(1000);
+        oA.start();
+        oA2.start();
     }
 
+    //Actually remove the card, done by subtracting the index, setting the card ImageView to invisible
+    //invalidating the view.  If removable from, return true, return false if not (for button function.
+    public boolean removeCard(int removeFrom) {
+        if (!removable[removeFrom])
+            return false;
+        Card temp = stacks[removeFrom].remove();
+        temp.getImageView().setVisibility(ImageView.INVISIBLE);
+        temp.getImageView().invalidate();
+        setRemovable();
+        ++this.score;
+        return true;
+    }
+
+    //Get the display height, useful for setting the size of the cards on screen.
     private int getScreenHeight(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         return metrics.heightPixels;
     }
 
-    public void draw() {
+    //A relic of the pre animation, pre imageview stage.
+    /*public void draw() {
         Context context = this.getApplicationContext();
         int dim = getScreenHeight(context);
-        this.draw = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
-        canvas.setBitmap(this.draw);
         if (this.pile.notEmpty())
-            canvas.drawBitmap(Bitmap.createScaledBitmap(
-                    BitmapFactory.decodeResource(context.getResources(), R.drawable.back), dim/6, (int)Math.round((dim/6)*1.452), false), 0, 40, null);
+            cardBack.setVisibility(ImageView.VISIBLE);
         for (int i = 0; i < 4; ++i)
-            stacks[i].draw(canvas, dim, dim, i);
-        view.setImageBitmap(draw);
-        view.invalidate();
-    }
+            stacks[i].draw(dim, i);
+        RelativeLayout rL = (RelativeLayout) findViewById(R.id.playField);
+        rL.invalidate();
+    }*/
 }

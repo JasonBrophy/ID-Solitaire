@@ -8,7 +8,6 @@
     tools:context="edu.jbrophypdx.idsolitaire.Instructions">
 
     <TextView
-        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,7 +17,6 @@
         android:textSize="40sp" />
 
     <TextView
-        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -28,7 +26,6 @@
         android:textColor="@color/yellow" />
 
     <Button
-        android:id="@+id/Finish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

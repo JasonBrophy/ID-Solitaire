@@ -3,10 +3,6 @@
  */
 package edu.jbrophypdx.idsolitaire;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-
 class Stack {
     protected Card[] column; //A stack of cards, to be 13 in size (max can be reached)
     protected int index; //The most recent index in use.
@@ -16,54 +12,64 @@ class Stack {
         index = -1;
     }
 
-    public int insertCard(Card toAdd) {
+    //Insert the card, increment BEFORE inserting, leaving the index AT the last card, not one past.
+    public void insertCard(Card toAdd) {
         if (index > 12)
-            return -1;
+            return;
         ++index;
         column[index] = new Card(toAdd);
-        return index;
     }
 
-    public boolean canMoveTo() {
-        return index == -1;
+    //If this stack is not empty, aka index is not -1, return true.
+    public boolean notEmpty() {
+        return index != -1;
     }
 
-    public boolean canMoveFrom() {
-        return index > -1;
+    //This function is redundant, and could be done
+    // with the above function, used to make the code more readable
+    public boolean isEmpty() {
+        return index <= -1;
     }
 
+    //Remove the top card in the stack, setting to null is unnecessary, return the card for
+    //insertion if a move is occuring.
     public Card remove() {
-        if (column[index] == null)
+        if (index == -1 || column[index] == null)
             return null;
         Card temp = column[index];
-        column[index] = null;
         --index;
         return temp;
     }
 
+    //return the top card in the stack, the first check is unnecessary right now, but avoids
+    //accessing a non-existent array slot if it were invoked on an empty array.
     public Card getTop() {
         if (index == -1)
             return null;
         return this.column[index];
     }
 
-    public void draw(Canvas canvas, int height, int width, int index) {
-        double widVal = width/6;
-        int wid = (int)Math.round(widVal);
-        int offset = -(-1-index)*(wid/5);
+    //Another relic of the preanimation setup, now not used at all after being massively pared down
+   /* public void draw(int width, int index) {
+        //double widVal = width/6;
+        //int wid = (int)Math.round(widVal);
+        //int offset = -(-1-index)*(wid/5);
+        ImageView temp;
 
         if (this.index == -1) {
-            Paint paint = new Paint();
-            paint.setColor(0xffffff);
-            canvas.drawBitmap(Bitmap.createBitmap(wid, (int)Math.round(widVal*1.452), Bitmap.Config.ARGB_8888), wid + offset, 0, paint);
             return;
         }
+        for(int i = 0; i < this.index; ++i){
+            temp = column[i].getImageView();
+            temp.setVisibility(ImageView.VISIBLE);
+            temp.invalidate();
+        }
+    }*/
 
-        column[0].getImageView()., (int)Math.round((index + 1) * widVal)+offset, 0, null)
-        for (int i = 1; i < this.index + 1; ++i)
-            canvas.drawBitmap(column[i].getBitmap(), (int)Math.round(((index + 1) * widVal))+offset, i * (height / 17), null);
-
+    public int getIndex() {
+        return this.index;
     }
+
 }
         
 
