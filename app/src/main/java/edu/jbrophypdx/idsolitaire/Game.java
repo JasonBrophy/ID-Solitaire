@@ -523,15 +523,4 @@ public class Game extends Activity {
         return metrics.heightPixels;
     }
 
-    //A relic of the pre animation, pre imageview stage.
-    /*public void draw() {
-        Context context = this.getApplicationContext();
-        int dim = getScreenHeight(context);
-        if (this.pile.notEmpty())
-            cardBack.setVisibility(ImageView.VISIBLE);
-        for (int i = 0; i < 4; ++i)
-            stacks[i].draw(dim, i);
-        RelativeLayout rL = (RelativeLayout) findViewById(R.id.playField);
-        rL.invalidate();
-    }*/
 }
