@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -214,7 +213,7 @@ public class Game extends Activity {
         this.finish();
     }
 
-    public void animateDeal(int stackNum, Card card){
+    public void animateDeal(int stackNum, Card card) {
         int index = stacks[stackNum].getIndex();
         ImageView img = card.getImageView();
         int dim = this.getScreenHeight(this.getApplicationContext());
@@ -297,12 +296,13 @@ public class Game extends Activity {
     }
 
 
-    public void animateRemove(ImageView img){
+    public void animateRemove(ImageView img) {
         ObjectAnimator oA = ObjectAnimator.ofInt(img, "Visibility", ImageView.INVISIBLE);
         oA.setDuration(10);
         oA.start();
 
     }
+
     //All move functions follow the same pattern (correlated to the buttons
     // on the activity screen), but to avoid excessive switch statements were split
     //into their own four instances.  On first click, the class int movefrom is updated
